@@ -1,7 +1,7 @@
-#import "lapreprint.typ": *
+#import "template/lapreprint.typ": *
 #show: template.with(
   title: "神经网络",
-  logo: "icon.png",
+  logo: "imgs/icon.png",
   doi: "www.baidu.com",
   theme: purple.darken(10%),
   authors: (
@@ -113,7 +113,7 @@ $ f_i(arrow(x)) = sigma_i(arrow(W) arrow(x) + arrow(b)) $
 
 ，where $W in RR^(n_i times n_(i+1))，b in RR^n_(i+1)，i in {0，dots ，N}$]
 其结构可以表示为：
-#image("mlp.png")
+#image("imgs/mlp.png")
 其中的$h_i、o_i$代表一个将符号函数替换为非线性激活函数的感知机。 （尝试根据图中给出的结构，推导上面给出的公式。 进一步的，写出$W_1，W_2$与各感知机参数之间的关系）
 
 我们可以发现，#text(fill: purple.darken(10%))[仅通过连接感知机，我们就获得了一个可以任意增大规模而基础结构相同的，从任意维欧式空间向任意维欧式空间映射的结构。 ]注意到，由于引入了非线性激活函数（试想如果使用线性激活函数会怎样？），这个结构还可以表示非线性的映射。 于是我们获得了一个典型的神经网络模型。 
@@ -201,7 +201,7 @@ $ partial(g^((i))(arrow(f)(arrow(x))))/(partial x^((j))) = sum_(t = 1)^b (partia
 计算图由两部分组成: 节点上的运算(通常用圈表示)，以及复合关系(通常用箭头表示)。 一个神经网络唯一对应了一个计算图。
 
 下面是一个典型的计算图:
-#image("graph.svg")
+#image("imgs/graph.svg")
 
 计算图最重要的一点是实现了#text(fill: purple.darken(10%))[局部计算]: 对于每个节点，我们只需要保存正向过程的输入，并且获得下一级节点的梯度，就可以函数关于本节点的梯度。
 
