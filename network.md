@@ -71,7 +71,7 @@ B --> C(神经网络)
 
 在神经网络的评估中，一个重要的指标是其泛化能力，即对于在经验E没有涉及的、同时位于任务T的样本空间范围内的点的估计效果。通常我们会从训练数据中单独分出一小部分，在训练时不作为样本对模型进行训练，并评估模型在这些样本上的性能。
 
-我们称 **在训练时作为样本对模型进行训练的数据集合为数据集，分出来的那一小部分为测试集**。通常，为了得知模型在训练过程中的性能变化趋势，我们还会从测试集中分出一小部分作为**验证集**，在训练中途多次在验证集上测试模型的性能表现。
+我们称**在训练时作为样本对模型进行训练的数据集合为数据集，分出来的那一小部分为测试集**。通常，为了得知模型在训练过程中的性能变化趋势，我们还会从测试集中分出一小部分作为**验证集**，在训练中途多次在验证集上测试模型的性能表现。
 
 ## 神经网络的构成
 
@@ -80,7 +80,9 @@ B --> C(神经网络)
 ### 感知机
 线性感知机算法（PLA）1957 年由 Frank Rosenblatt 提出。感知机是二分类的线性分类模型，其输入为实例的特征向量，输出为实例的类别，取值为 $+1$ 和 $-1$。
 > perceptron: 
-$ f(\vec{x}) = sign(\vec{w}^T \vec{x} + b) $，where $w，x \in \mathbb{R}^n，b \in \mathbb{R}$
+>$$
+ f(\vec{x}) = sign(\vec{w}^T \vec{x} + b) 
+>$$，where $w，x \in \mathbb{R}^n，b \in \mathbb{R}$
 
 显然，这是一个含参数$w$的，且能够将输入根据参数$w$唯一映射到输出的简单结构。
 
@@ -106,8 +108,10 @@ $$ f(\vec{x}) = f_N \circ \dots \circ f_0 $$ $$ f_i(\vec{x}) = \sigma_i(W \vec{x
 
 ### 最小化损失函数
 
-注意到损失函数的定义，我们假定了模型性能越差，损失函数越大。也就是说，**我们只需要反过来通过调整M，在经验E上最小化损失函数，就能达到提高模型M在任务T上表现的目的。**于是，神经网络的优化任务可以如下形式化定义：
-> $$ \theta^* = \arg \min_\theta \cal{L}(M_\theta，E) $$
+注意到损失函数的定义，我们假定了模型性能越差，损失函数越大。也就是说，**我们只需要反过来通过调整M，在经验E上最小化损失函数，就能达到提高模型M在任务T上表现的目的。** 于是，神经网络的优化任务可以如下形式化定义：
+> $$
+ \theta^* = \arg \min_\theta \cal{L}(M_\theta，E) 
+> $$
 
 其中$\theta$**所有的可调整参数**。通过损失函数，我们成功将主观的性能评估和改进问题，转化为了计算和优化损失函数的问题，进而可以通过数值方法解决。可以认为，通过设计损失函数，我们将主观性转移至了损失函数中。
 ## 基于梯度的优化方法
@@ -116,9 +120,13 @@ $$ f(\vec{x}) = f_N \circ \dots \circ f_0 $$ $$ f_i(\vec{x}) = \sigma_i(W \vec{x
 ### 梯度下降算法
 基于梯度的优化方法中最易理解的是梯度下降算法：
 > 令
-$$\theta_{n+1} = \theta_n - \eta \frac{\partial \cal{L}(M_{\theta_n}，E)}{\partial \theta_n}$$
-则对于一类性质较好的$\cal{L}$和$M_\theta$，我们有
-$$ \lim_{\eta \rightarrow 0，n \rightarrow \infty}\theta_n = \theta^* $$
+> $$
+> \theta_{n+1} = \theta_n - \eta \frac{\partial \cal{L}(M_{\theta_n}，E)}{\partial \theta_n}
+> $$
+>则对于一类性质较好的$\cal{L}$和$M_\theta$，我们有
+> $$
+> \lim_{\eta \rightarrow 0，n \rightarrow \infty}\theta_n = \theta^*
+> $$
 
 我们知道梯度的反向是该点邻域中函数值下降最快的方向，因此当函数不太差时，沿梯度的反向进行参数的更新都有机会达到函数的最小值。
 
@@ -127,9 +135,14 @@ $$ \lim_{\eta \rightarrow 0，n \rightarrow \infty}\theta_n = \theta^* $$
 ### 随机梯度下降算法(SGD)
 
 随机梯度下降算法是目前几乎所有神经网络的学习算法。目前已知的绝大多数算法都是基于这个方法的优化或微调。或者说，今天我们所讲的神经网络就是指能够使用随机梯度下降算法进行训练的神经网络。
-> 令$$ \theta_{n+1} = \theta_{n} - \eta \frac{\partial\cal{L}(M_{\theta_n}，{X_i} \subset E)}{\partial \theta_n} $$
-则对于大多数$\cal(L)$和$M_\theta$，我们有
-$$ \lim_{\eta \rightarrow 0，n \rightarrow \infty}\theta_n = \theta^* $$
+> 令
+> $$
+> \theta_{n+1} = \theta_{n} - \eta \frac{\partial\cal{L}(M_{\theta_n}，{X_i} \subset E)}{\partial \theta_n}
+> $$
+>则对于大多数$\cal{L}$和$M_{\theta}$，我们有
+> $$
+> \lim_{\eta \rightarrow 0，n \rightarrow \infty}\theta_n = \theta^*
+> $$
 
 
 这个算法的证明设计到一些统计知识，在此暂且不证明。(如有兴趣，可以考虑: 1.梯度在样本分布下的无偏估计是什么? 2.考虑使用部分样本进行梯度计算时引入的噪声$\epsilon$。这对于处于局部极小值的参数的梯度计算有什么影响?)
@@ -141,7 +154,10 @@ $$ \lim_{\eta \rightarrow 0，n \rightarrow \infty}\theta_n = \theta^* $$
 理论上，给定任何确定的网络结构，我们都可以写出梯度的解析表达。然而当网络规模增大时，这显然是不可实现的。因此我们需要寻找数值方法计算参数的梯度。
 
 1.数值微分法
->$$ \hat{\theta}_{n+1,i} = \hat{\theta}_{n,i} - \eta\frac{\cal{L}(M_{\hat{\theta}_{n,i} + \epsilon}，{X_i}) - \cal{L}(M_{\hat{\theta}_{n,i} - \epsilon}，{X_i})}{2\epsilon} $$
+> $$
+> \hat{\theta}_{n+1,i} = \hat{\theta}_{n,i} - \eta\frac{\cal{L}(M_{\hat{\theta}_{n,i} + \epsilon}，{X_i}) - \cal{L}(M_{\hat{\theta}_{n,i} - \epsilon}，{X_i})}{2\epsilon}
+> $$
+
 该方法的时间复杂度是$\cal{O}(N) \times \cal{O}(forward)$，$N$是参数规模。通常来说，$\cal{O}(forward)$ 与参数量成近似线性关系，因此总的复杂度为$\cal{O}(N^2)$。这个复杂度在参数量很大(现代深度神经网络的参数量通常在千万到百亿级别)时是不可接受的。
 
 我们注意到，在进行网络中靠近输出部分的参数的梯度计算时，两次正向传播中有大量的重复计算。因此我们希望寻找一种能够复用计算结果的方法来降低重复计算的开销。
@@ -151,9 +167,15 @@ $$ \lim_{\eta \rightarrow 0，n \rightarrow \infty}\theta_n = \theta^* $$
 
 - 链式法则
 回顾微积分中的链式法则。
->令
-$$f: \mathbb{R}^a \rightarrow \mathbb{R}^b ，g: \mathbb{R}^b \rightarrow \mathbb{R}^c ，c \in \mathbb{R}^a$$，则有
-$$ \frac{\partial(g^{(i)}(\vec{f}(\vec{x}))}{\partial x^{(j)}} = \sum_{t = 1}^b \frac{\partial g^{(i)}(f^{(1)}(\vec{x})，\dots，f^{(b)}(\vec{x}))}{\partial f^{(t)}(\vec{x}))}  \frac{\partial f^{(t)}(\vec{x})}{\partial x^{(j)}} $$
+> 令
+> $$
+> f: \mathbb{R}^a \rightarrow \mathbb{R}^b ，g: \mathbb{R}^b \rightarrow \mathbb{R}^c ，c \in \mathbb{R}^a
+> $$
+> ，则有
+> 
+> $$
+> \frac{\partial g^i \circ \vec{f}}{\partial x^j} = \sum_{t = 1}^{b} \frac{\partial g^i(f^1，...，f^b)}{\partial f^t} \times \frac{\partial f^t}{\partial x^j}
+> $$
 
 可以发现，对于任何完全由复合函数构成的函数，我们都可以将其分为两部分进行计算，这两部分都仅与构成复合函数的部分自身相关。回顾神经网络的定义，我们发现神经网络**确实由这样可导的简单部分相互连接(即复合)构成的**。这表明我们对于神经网络的任意分割，都可以分别计算它们各自的参数的梯度，再将其按照网络结构的连接关系进行组合得到整个网络的参数的梯度。
 
@@ -245,7 +267,9 @@ for data, label in dataset:
 #### MLP的表示能力与奥卡姆剃刀原则
 
 为了理解神经网络结构设计的目的，我们首先引入表述MLP表达能力的一个定理：
-> $$ \forall f \in L(\mathbb{R}^n), \forall \epsilon>0, \exists F_\theta \in MLP, \forall x \in \mathbb{R}^n , s.t. |F_\theta (x)-f(x)|<\epsilon $$
+> $$
+> \forall f \in L(\mathbb{R}^n), \forall \epsilon>0, \exists F_\theta \in MLP, \forall x \in \mathbb{R}^n , s.t. |F_\theta (x)-f(x)|<\epsilon
+> $$
 
 这表明参数量足够大的MLP可以以任意精度逼近任何可测函数。这是否意味着我们对于任何学习任务都可以直接选取一个足够大的MLP在训练集上进行训练呢？答案显然是否定的。机器学习任务是这样的，模型只需要表达能力足够强就可以了，而我们让模型进行学习需要考虑的就很多了，梯度下降能不能找到最优解，在训练集上训练后是否会过拟合，都需要深思熟虑。例如，严格来说，如果我们能够完全拟合训练集分布，那么我们会得到一个多点离散分布。这是离散化采样带来的必然结果。但这个估计显然是不合理的，例如我们如果在图像生成任务上完全拟合训练集，那么使用训练后的模型生成图片就变成了从训练集中随机挑选一张图片。基于这一点再次强调，**机器学习问题和优化问题的根本区别在于，除了希望训练误差很低，我们也希望泛化误差很低**。
 
@@ -270,7 +294,9 @@ for data, label in dataset:
 为了解决平移不变性问题，**卷积神经网络（Convolutional Neural Network, CNN）** 被广泛应用。CNN通过使用一组特定的的卷积核在输入上进行卷积操作，使得网络能够提取平移不变的特征。
 
 卷积操作是CNN的核心，通过在输入上应用卷积核来提取局部特征。每个卷积核扫描整个输入，生成一个特征张量。这些特征张量能够捕捉不同层次的特征，如边缘、纹理、形状等。卷积操作可以表示为如下形式：
->$$ h_(i \dots j) = \sum_m \dots \sum_n x_{i+m, \dots, j+n} w_{m \dots n}$$其中h为输出的特征，x是输入，w是卷积核。
+>$$
+> h_(i \dots j) = \sum_m \dots \sum_n x_{i+m, \dots, j+n} w_{m \dots n} 
+> $$其中h为输出的特征，x是输入，w是卷积核。
 
 
 一个二维卷积的过程可以可视化为下图：
@@ -294,13 +320,13 @@ for data, label in dataset:
 
 自回归编码器实际上是一种生成模型。它由两个主要部分组成：编码器（Encoder）和解码器（Decoder）。编码器将高维输入数据映射到低维特征空间，而解码器则从低维特征空间中重构出原始数据。
 
->编码器：$z = f(x)$ ，解码器：$hat(x) = g(z)$，其中$x \in \cal{X}, z \in \mathbb{R}^d$
+>编码器：$z = f(x)$ ，解码器：$\hat{x} = g(z)$，其中$x \in \cal{X}, z \in \mathbb{R}^d$
 
 特征空间不变性要求编码器将原始数据映射到特征空间中时，能够保留数据的关键特征和结构。自回归编码器通过保证能够仅通过特征空间中的编码向量还原原始数据来保证特征空间不变性。
 
 自回归编码器通过最小化重构误差来确保特征空间中的点能够有效地表示原始数据。重构误差通常通过均方误差来衡量：
 
-$ cal(L)(x, hat(x)) = |x - hat(x)|^2 $
+$$ \cal{L}(x, \hat{x}) = |x - \hat{x}|^2 $$
 
 通过最小化重构误差，我们能够让编码器在学习到从原空间到低维流形的映射的同时使解码器学习到从低维流形到原空间的映射。编码器和解码器通常具有对称的结构，以确保特征空间中点的表示和原始数据之间的映射关系保持一致。
 
@@ -312,7 +338,10 @@ $ cal(L)(x, hat(x)) = |x - hat(x)|^2 $
 在序列处理问题中，转移概率不变性是一个重要的概念。**它指的是在序列的不同时间步之间，状态转移的概率保持不变**。换句话说，模型在每个时间步的状态转移规则是一致的，不依赖于时间步的具体位置。这一性质确保了模型能够一致地处理整个序列中的数据，无论序列的长度或位置如何。我们可以形式化地表述这一点：
 
 >设$h_t \in \mathbb{R}^d$表示时间步$t$的隐藏状态($h$是特征空间中的向量)，$x_t$表示时间步$t$的输入数据，那么隐藏状态的更新规则可以表示为：
-$$h_t = f(h_{t-1}, x_t, t)$$其中$f$是状态转移函数。
+> $$
+> h_t = f(h_{t-1}, x_t, t)
+> $$
+> 其中$f$是状态转移函数。
 
 这意味着，对于所有的$t$，状态转移函数$f$的形式和参数都不变。
 
@@ -320,8 +349,11 @@ $$h_t = f(h_{t-1}, x_t, t)$$其中$f$是状态转移函数。
 递归神经网络（Recurrent Neural Network, RNN）是一类适合处理序列数据的神经网络模型。RNN的设计基于特征空间不变性和转移概率不变性，能够有效捕捉序列数据的动态特征和时间依赖性。
 
 RNN由一系列递归单元组成，每个单元在每个时间步接收当前输入和前一个时间步的隐藏状态，并输出新的隐藏状态。这种结构可以如下形式化表示：
->$h_t = \sigma(W_h h_{t-1} + W_x x_t + W_t t + b_h)$
-$y_t = \sigma(W_y h_t + b_y)$
+> $$
+> h_t = \sigma(W_h h_{t-1} + W_x x_t + W_t t + b_h) $$ 
+> $$
+> y_t = \sigma(W_y h_t + b_y)
+> $$
 
 ![](imgs/rnn.png)
 
