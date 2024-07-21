@@ -197,49 +197,51 @@ $$ f(\vec{x}) = f_N \circ \dots \circ f_0 $$ $$ f_i(\vec{x}) = \sigma_i(W \vec{x
 
 局部计算除了通过信息的复用显著降低了梯度求解的时间复杂度以外，也方便了使用现代编程语言实现神经网络。我们可以简单的将每个计算节点实例化为一个对象，这些相互不耦合的对象可以通过数据的传递完成一个完整神经网络的功能。下面给出上方计算图的实现，以及其对应的神经网络在某个训练集上的训练过程。我们假设这个神经网络的输入是a，输出为乘法节点的输出，即ab。该神经网络只含有一个参数b。我们选用的损失函数为$\cal{L}(out, label) = 3(label+out)$。（请自行验证该神经网络的计算过程符合上方计算图）。我们给出以下实现：
 ```python
-class MulNode:
-  def __init__(self):
-    self.x = None
-    self.y = None
+class MulNode:  
+    def __init__(self):
+        self.x = None
+        self.y = None
 
-  def forward(self, x, y):
-    self.x = x
-    self.y = y
-    return x * y
+    def forward(self, x, y):
+        self.x = x
+        self.y = y
+        return x * y
 
-  def backward(self, d_next):
-    return self.y, self.x
+    def backward(self, d_next):
+        return self.y, self.x
 
 class AddNode:
-  def forward(x, y):
-    return x + y
+    def forward(self, x, y):
+        return x + y
 
-  def backward(d_next):
-    return d_next, d_next
+    def backward(self, d_next):
+        return d_next, d_next
 
 class MyNetwork:
-  def __init__(self):
-    self.node1 = MulNode()
-    self.node2 = AddNode()
-    self.node3 = MulNode()
+    def __init__(self):
+        self.node1 = MulNode()
+        self.node2 = AddNode()
+        self.node3 = MulNode()
 
-  def forward(self, a, b, c):
-    h1 = self.node1.forward(b, c)
-    h2 = self.node2.forward(a, h1)
-    return self.node3.forward(3, h2)
+    def forward(self, a, b, c):
+        h1 = self.node1.forward(b, c)
+        h2 = self.node2.forward(a, h1)
+        return self.node3.forward(3, h2)
 
-  def backward(self, d_out):
-    _, d_h2 = self.node3.backward(d_out)
-    d_a, d_h1 = self.node2.backward(d_h2)
-    d_b, d_c = self.node1.backward(d_h1)
+    def backward(self, d_out):
+        _, d_h2 = self.node3.backward(d_out)
+        d_a, d_h1 = self.node2.backward(d_h2)
+        d_b, d_c = self.node1.backward(d_h1)
+        return d_a, d_b, d_c
 
 model = MyNetwork()
-lr = 1e-4
+lr = 1e-1
+parameter = 0
 for data, label in dataset:
-  parameter = b
-  loss = model.forward(label, parameter, data)
-  d_parameter = model.backward(1)
-  parameter -= lr * d_parameter
+    loss = model.forward(label, parameter, data)
+    _, d_parameter, _ = model.backward(1)
+    parameter -= lr * d_parameter
+    print(parameter, loss)
 ```
 ## 机器学习算法与神经网络的结构
 ### 决定机器学习算法效果的评价指标
